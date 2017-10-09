@@ -12,7 +12,13 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Let's consider problem of finding x, that x maximise expression f(x) = 2.0 + (x / 50.0) + sin(x) + 2.0 * sin(pi * x / 5.0), x in (0, 150).
+ * Here is example of main class to do that using evolutionary approach
+ */
 public class Main {
+
+    //parameters + configuration
     private static final Random RANDOM = new Random();
     private static final int MAX_GENES = 24;
     private static final double MIN_X = 0.0;
@@ -21,6 +27,7 @@ public class Main {
     private final static Logger logger = Logger.getLogger(Main.class.getName());
 
     public static void main(String[] args) {
+        //types by order: genes, decoded genes - solution, fitness, container with statistics
         EvolutionConfiguration<int[], Double, Double, MyStatisticsPerEpoch> evolutionConfiguration = (new EvolutionConfigurationBuilder<int[], Double, Double, MyStatisticsPerEpoch>())
                 //uniform crossover
                 .crossover((firstParent, secondParent) -> {
@@ -32,7 +39,6 @@ public class Main {
                         } else {
                             firstSetOfGenes[i] = secondParent.getGenes()[i];
                         }
-
                         if (RANDOM.nextBoolean()) {
                             secondSetOfGenes[i] = secondParent.getGenes()[i];
                         } else {
@@ -127,14 +133,12 @@ public class Main {
      * @param x
      */
     private static double calculateFitness(double x) {
-//        try {
-//            Thread.sleep(1);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
         return 2.0 + (x / 50.0) + Math.sin(x) + 2.0 * Math.sin(Math.PI * x / 50.0);
     }
 
+    /**
+     * Own implementation of class with statistics, most important is method getSummary(). It is used to store and print results
+     */
     private static class MyStatisticsPerEpoch extends StatisticsPerEpoch<int[], Double, Double> {
 
         MyStatisticsPerEpoch(int epoch, long execution, int countOfFitnessEvaluations, IndividualWithAssignedFitness<int[], Double, Double> bestIndividual, List<IndividualWithAssignedFitness<int[], Double, Double>> population) {

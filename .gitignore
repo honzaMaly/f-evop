@@ -23,3 +23,5 @@ hs_err_pid*
 
 # Intellij
 .idea/
+*.iml
+target/generated-sources/
